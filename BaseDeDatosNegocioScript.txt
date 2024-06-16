@@ -1,0 +1,275 @@
+USE [Negocio]
+GO
+/****** Object:  Table [dbo].[Productos]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Productos](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](255) NOT NULL,
+	[Descripcion] [nvarchar](max) NULL,
+	[Precio] [decimal](10, 2) NOT NULL,
+	[Stock] [int] NOT NULL,
+	[FechaCreacion] [datetime] NULL,
+	[FechaUltimaActualizacion] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Usuarios]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Usuarios](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[NombreUsuario] [nvarchar](255) NOT NULL,
+	[Contrasena] [nvarchar](255) NOT NULL,
+	[Email] [nvarchar](255) NOT NULL,
+	[Rol] [nvarchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[Email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Productos] ADD  DEFAULT (' ') FOR [Descripcion]
+GO
+ALTER TABLE [dbo].[Productos] ADD  DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+ALTER TABLE [dbo].[Productos] ADD  DEFAULT (getdate()) FOR [FechaUltimaActualizacion]
+GO
+ALTER TABLE [dbo].[Usuarios]  WITH CHECK ADD CHECK  (([Rol]='usuario' OR [Rol]='admin'))
+GO
+/****** Object:  StoredProcedure [dbo].[ActualizarProducto]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ActualizarProducto]
+    @ID INT,
+    @Nombre NVARCHAR(255),
+    @Descripcion NVARCHAR(MAX),
+    @Precio DECIMAL(10, 2),
+    @Stock INT
+AS
+BEGIN
+    UPDATE Productos
+    SET 
+        Nombre = @Nombre,
+        Descripcion = @Descripcion,
+        Precio = @Precio,
+        Stock = @Stock,
+        FechaUltimaActualizacion = GETDATE()
+    WHERE 
+        ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[ActualizarUsuario]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ActualizarUsuario]
+    @ID INT,
+    @NombreUsuario NVARCHAR(255),
+    @Email NVARCHAR(255),
+    @Rol NVARCHAR(50)
+AS
+BEGIN
+    
+    UPDATE Usuarios
+    SET 
+        NombreUsuario = @NombreUsuario,
+        Email = @Email,
+        Rol = @Rol
+    WHERE 
+        ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[AgregarProducto]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[AgregarProducto]
+    @Nombre NVARCHAR(255),
+    @Descripcion NVARCHAR(MAX),
+    @Precio DECIMAL(10, 2),
+    @Stock INT
+AS
+BEGIN
+    INSERT INTO Productos (Nombre, Descripcion, Precio, Stock)
+    VALUES (@Nombre, @Descripcion, @Precio, @Stock);
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[AgregarUsuario]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[AgregarUsuario]
+    @NombreUsuario NVARCHAR(255),
+    @Contrasena NVARCHAR(255),
+    @Email NVARCHAR(255),
+    @Rol NVARCHAR(50)
+AS
+BEGIN
+    
+    INSERT INTO Usuarios (NombreUsuario, Contrasena, Email, Rol)
+    VALUES (@NombreUsuario, @Contrasena, @Email, @Rol);
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[Busqueda]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[Busqueda]
+    @Busqueda NVARCHAR(255)
+AS
+BEGIN
+
+    SELECT 
+        ID, 
+        Nombre, 
+        Descripcion, 
+        Precio, 
+        Stock, 
+        FechaCreacion, 
+        FechaUltimaActualizacion
+    FROM 
+        Productos
+    WHERE 
+        Nombre LIKE '%' + @Busqueda + '%'
+        OR Descripcion LIKE '%' + @Busqueda + '%'
+    ORDER BY 
+        FechaCreacion DESC;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[EliminarProducto]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[EliminarProducto]
+    @ID INT
+AS
+BEGIN
+    DELETE FROM Productos
+    WHERE ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[EliminarUsuario]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[EliminarUsuario]
+    @ID INT
+AS
+BEGIN
+    
+    DELETE FROM Usuarios
+    WHERE ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerPerfilUsuario]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerPerfilUsuario]
+    @ID INT
+AS
+BEGIN
+    SELECT 
+        NombreUsuario,
+        Email,
+        Rol
+    FROM 
+        Usuarios
+    WHERE 
+        ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerProductoPorID]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerProductoPorID]
+    @ID INT
+AS
+BEGIN
+    SELECT 
+        ID, 
+        Nombre, 
+        Descripcion, 
+        Precio, 
+        Stock, 
+        FechaCreacion, 
+        FechaUltimaActualizacion 
+    FROM 
+        Productos
+    WHERE 
+        ID = @ID;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerTodosLosProductos]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerTodosLosProductos]
+AS
+BEGIN
+    SELECT 
+        ID, 
+        Nombre, 
+        Descripcion, 
+        Precio, 
+        Stock, 
+        FechaCreacion, 
+        FechaUltimaActualizacion 
+    FROM 
+        Productos;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerTodosLosUsuarios]    Script Date: 15/6/2024 11:05:37 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[ObtenerTodosLosUsuarios]
+AS
+BEGIN
+    SELECT 
+        ID, 
+        NombreUsuario, 
+        Contrasena, 
+        Email, 
+        Rol
+    FROM 
+        Usuarios;
+END;
+
+GO
