@@ -30,6 +30,7 @@ Funcionalidades de las Api:
 - Eliminar a un usuario
 
 (swagger tiene unos candados que serian usados para la validacion del token y rol del usuario, pero el token generado es invalido)
+![image](https://github.com/Whisman21/Desaf-o-de-Desarrollo-Web-Full-Stack/assets/144621111/409a2984-622e-4292-a5c7-fd54f82397ff)
 
 Para cada funcion debera de llenar sus espacions correspondientes o le saltara error
 
