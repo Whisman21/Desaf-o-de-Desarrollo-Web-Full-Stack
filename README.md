@@ -1,7 +1,8 @@
 # Desafio-de-Desarrollo-Web-Full-Stack
 Esta api esta orientada a un sistema para la gestión de productos y usuarios de un negocio
 
-Para poder usar:
+# Para poder usar:
+
 Primero que nada debe de crearse la base de datos, Luego de esto descomprimir el rar para luego ser abierto, para poder probarla correctamente se debe de instalar los siguientes paquetes si no se tienen:
 
 System.data.sqlclient
@@ -11,13 +12,15 @@ Microsoft.AspNetCore.Authentication.JwtBearer
 Microsoft.EntityFrameworkCore.Tools
 Swashbuckle.AspNetCore.Swagger
 
-La api debe de ejecutarse en modo https 
+
+La api debe de ejecutarse en modo https:
+
 ![image](https://github.com/Whisman21/Desaf-o-de-Desarrollo-Web-Full-Stack/assets/144621111/8273d5d7-23b1-49a3-bfd0-8977ae654b53)
 
 En la Clase "Conexion.cs" debera de poner sus datos correspondientes a su base de datos 
 public static string cadenaConexion = "Data Source=(nombre del server);Initial Catalog=(Nombre de la base de datos);User ID=(nombre de usuario);Password=(clave)";
 
-Funcionalidades de las Api:
+# Funcionalidades de las Api:
 - Obtener todos los productos.
 - Obtener un producto por su ID.
 - Obtener un producto por su nombre o desc
@@ -35,7 +38,7 @@ Funcionalidades de las Api:
 (swagger tiene unos candados que serian usados para la validacion del token y rol del usuario, pero el token generado es invalido)
 ![image](https://github.com/Whisman21/Desaf-o-de-Desarrollo-Web-Full-Stack/assets/144621111/409a2984-622e-4292-a5c7-fd54f82397ff)
 
-Para cada funcion debera de llenar sus espacions correspondientes o le saltara error
+# Para cada funcion debera de llenar sus espacions correspondientes o le saltara error
 
 ejemplo:
 Como deberia de ser:
@@ -50,7 +53,8 @@ Los ID son auto incrementables por lo cual cada vez que cree un usuario/producto
 
 Los cambios realizados pueden ser visto en tiempo real en la misma pagina web como en la base de datos
 
-Puede usar datos como:
+# Puede usar datos como:
+
 Producto:
 Nombre = manzana
 Descripcion = Roja
