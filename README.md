@@ -1,5 +1,8 @@
 # Desafio-de-Desarrollo-Web-Full-Stack
-Esta api esta orientada a un sistema para la gestión de productos y usuarios de un negocio, para poder probarla correctamente se debe de instalar los siguientes paquetes si no se tienen:
+Esta api esta orientada a un sistema para la gestión de productos y usuarios de un negocio
+
+Para poder usar:
+Primero que nada debe de crearse la base de datos, Luego de esto descomprimir el rar para luego ser abierto, para poder probarla correctamente se debe de instalar los siguientes paquetes si no se tienen:
 
 System.data.sqlclient
 Newtonsoft.Json
